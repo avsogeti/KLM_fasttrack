@@ -1,29 +1,42 @@
 package com.airfranceklm.fasttrack.assignment.controller;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import com.airfranceklm.fasttrack.assignment.jpa.HolidayEntity;
+import com.airfranceklm.fasttrack.assignment.service.HolidayService;
 
-import com.airfranceklm.fasttrack.assignment.resources.Holiday;
-import com.airfranceklm.fasttrack.assignment.resources.enums.Status;
+import lombok.AllArgsConstructor;
 
-@Controller
+@RestController
 @RequestMapping("/holidays")
+@AllArgsConstructor
 public class HolidaysApi {
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<Holiday>> getHolidays() {
-        return new ResponseEntity<List<Holiday>>(Arrays.asList(new Holiday(
-              "1", "Holiday 1", "123", "2023-01-01", "2023-01-10", Status.DRAFT),
-              new Holiday("2", "Holiday 2", "123", "2023-01-01", "2023-01-10", Status.DRAFT)
+   private final HolidayService holidayService;
 
+   //get all holidays
+   @RequestMapping(method = RequestMethod.GET)
+   public ResponseEntity<List<HolidayEntity>> getHolidays() {
+      return new ResponseEntity<>(this.holidayService.getHolidays(), HttpStatus.OK);
+   }
 
-        ), HttpStatus.OK);
-    }
+   //post holiday
+   @RequestMapping(method = RequestMethod.POST)
+   public ResponseEntity<HolidayEntity> createHoliday(@RequestBody HolidayEntity holiday) {
+      return new ResponseEntity<>(this.holidayService.createHoliday(holiday), HttpStatus.CREATED);
+   }
 
+   //delete holiday
+   @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
+   public ResponseEntity<Void> deleteHolidayById(@PathVariable("id") String holidayId) {
+      this.holidayService.deleteHolidayById(holidayId);
+      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+   }
 }
