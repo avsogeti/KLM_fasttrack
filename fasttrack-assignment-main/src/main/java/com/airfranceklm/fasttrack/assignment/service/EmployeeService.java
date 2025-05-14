@@ -6,20 +6,32 @@ import org.springframework.stereotype.Service;
 
 import com.airfranceklm.fasttrack.assignment.jpa.EmployeeEntity;
 import com.airfranceklm.fasttrack.assignment.repository.EmployeeRepository;
+import com.airfranceklm.fasttrack.assignment.resources.Employee;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeService {
+public class EmployeeService
+{
 
    private final EmployeeRepository employeeRepository;
 
-   public List<EmployeeEntity> getEmployee(){
-      return employeeRepository.findAll();
+   public List<Employee> getEmployee()
+   {
+
+      return employeeRepository.findAll()
+            .stream()
+            .map(entity -> new Employee(entity.getEmployeeId(), entity.getName()))
+            .toList();
    }
 
-   public EmployeeEntity createEmployee(EmployeeEntity employee) {
-      return employeeRepository.save(employee);
+   public Employee createEmployee(Employee employee)
+   {
+      EmployeeEntity employeeEntity = new EmployeeEntity();
+      employeeEntity.setName(employee.getName());
+
+      EmployeeEntity savedEntity = employeeRepository.save(employeeEntity);
+      return new Employee(savedEntity.getEmployeeId(), savedEntity.getName());
    }
 }

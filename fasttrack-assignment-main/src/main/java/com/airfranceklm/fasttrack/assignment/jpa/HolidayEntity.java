@@ -7,11 +7,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
 
 @Getter
 @Setter
@@ -21,13 +20,16 @@ public class HolidayEntity
 {
    @Id
    @GeneratedValue(strategy = GenerationType.UUID)
-   @Column(name = "holiday_id", nullable = false, unique = true, updatable = false)
+   @NotNull
+   @Column(name = "holidayId", nullable = false, unique = true, updatable = false)
    private String holidayId;
 
+   @NotNull
    @Column(name = "holidayLabel", nullable = false)
    private String holidayLabel;
 
-   @JoinColumn(name = "employee_id", nullable = false)
+   @NotNull
+   @Column(name = "employeeId", nullable = false)
    private String employeeId;
 
    @Column(name = "startOfHoliday")
@@ -36,6 +38,7 @@ public class HolidayEntity
    @Column(name = "endOfHoliday")
    private String endOfHoliday;
 
+   @NotNull
    @Column(name = "status", nullable = false)
    private Status status;
 }
